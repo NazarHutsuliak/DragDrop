@@ -10,5 +10,7 @@ namespace DragDrop.Models
         {
             Database.EnsureCreated();
         }
+
+        public DbSet<AccountsModelWithSumBalance> Accounts { get; set; }
     }
 }

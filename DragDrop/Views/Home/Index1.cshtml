@@ -1,0 +1,12 @@
+﻿@model IEnumerable<DragDrop.Models.AccountsModelWithSumBalance>
+@{
+    ViewData["Title"] = "Таблица";
+}
+
+
+@foreach (var r in Model)
+{
+    <tr><td>  @r.Name </td><td> @r.Surname  </td><td>  @r.Balance 
+              </td><td> @r.Currency  </td><td>  @r.RegistrationCity  </td><td>  @r.Age  </td></tr>
+
+}

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Http;
 using DragDrop.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-
+using System.Collections.Generic;
+using DragDrop.Provider;
 namespace DragDrop.Controllers
 {
     public class HomeController : Controller
@@ -28,7 +29,7 @@ namespace DragDrop.Controllers
             if (uploadedFile != null)
             {
                 // путь к папке Files
-                string path = "/Files/" + uploadedFile.FileName;
+                string path = @"\Files\" + uploadedFile.FileName;
                 // сохраняем файл в папку Files в каталоге wwwroot
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
@@ -37,10 +38,17 @@ namespace DragDrop.Controllers
                 FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
                 _context.Files.Add(file);
                 _context.SaveChanges();
+                var dataProvider = DataProvider.Create(file);
+                var accounts = dataProvider.GetData();
+                var accountsWithSum = new AccountsModelWithSumBalance();
+                accountsWithSum.GetAccountsWithSumBalances(accounts);
+                _context.Accounts.Add(accountsWithSum);
             }
 
-            return RedirectToAction("Index");
+
+            return View("Index1");
         }
+ 
 
     }
 }
