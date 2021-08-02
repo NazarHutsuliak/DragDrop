@@ -11,8 +11,8 @@ namespace DragDrop.Controllers
 {
     public class HomeController : Controller
     {
-        ApplicationContext _context;
-        IWebHostEnvironment _appEnvironment;
+       readonly ApplicationContext _context;
+       readonly IWebHostEnvironment _appEnvironment;
         public HomeController(ApplicationContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
@@ -24,31 +24,31 @@ namespace DragDrop.Controllers
             return View(_context.Files.ToList());
         }
         [HttpPost]
-        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        public async Task<IActionResult> Index1(IFormFile uploadedFile)
         {
             if (uploadedFile != null)
             {
-                // путь к папке Files
                 string path = @"\Files\" + uploadedFile.FileName;
-                // сохраняем файл в папку Files в каталоге wwwroot
+
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
+
                 FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
                 _context.Files.Add(file);
                 _context.SaveChanges();
+
                 var dataProvider = DataProvider.Create(file);
                 var accounts = dataProvider.GetData();
+
                 var accountsWithSum = new AccountsModelWithSumBalance();
-                accountsWithSum.GetAccountsWithSumBalances(accounts);
-                _context.Accounts.Add(accountsWithSum);
+                var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
+                return View(result);
             }
 
+            return View();
 
-            return View("Index1");
         }
- 
-
     }
 }

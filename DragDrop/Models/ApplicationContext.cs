@@ -6,11 +6,10 @@ namespace DragDrop.Models
     {
         public DbSet<FileModel> Files { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options)
+            : base(options)
         {
             Database.EnsureCreated();
         }
 
-        public DbSet<AccountsModelWithSumBalance> Accounts { get; set; }
     }
 }

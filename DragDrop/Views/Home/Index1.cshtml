@@ -1,12 +1,46 @@
 ﻿@model IEnumerable<DragDrop.Models.AccountsModelWithSumBalance>
 @{
-    ViewData["Title"] = "Таблица";
-}
-
-
-@foreach (var r in Model)
-{
-    <tr><td>  @r.Name </td><td> @r.Surname  </td><td>  @r.Balance 
-              </td><td> @r.Currency  </td><td>  @r.RegistrationCity  </td><td>  @r.Age  </td></tr>
+    ViewBag.Title = "Account`s Table";
 
 }
+
+<h2>Account`s Table</h2>
+    <table id="customers" class="table" >
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Баланс</th>
+                <th>Валюта</th>
+                <th>Город</th>
+                <th>Возраст</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Model)
+            {
+            <tr>
+                <td>
+                    @r.Name
+                </td>
+                <td>
+                    @r.Surname
+                </td>
+                <td>
+                    @r.Balance
+                </td>
+                <td>
+                    @r.Currency
+                </td>
+                <td>
+                    @r.RegistrationCity
+                </td>
+                <td>  
+                    @r.Age  
+                </td>
+               
+            </tr>
+            }
+        </tbody>
+    </table>
+    

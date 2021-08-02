@@ -10,7 +10,7 @@ namespace DragDrop.Adapters
         private readonly string _content;
         public AdapterFromYaml(FileModel file)
         {
-            var pathToFile = file.Path;
+            var pathToFile = @"C:\Users\nhutsuliak\source\repos\DragDrop\DragDrop\wwwroot\" + file.Path;
             _content = File.ReadAllText(pathToFile);
         }
 

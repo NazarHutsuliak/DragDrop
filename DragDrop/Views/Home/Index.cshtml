@@ -1,9 +1,14 @@
 ﻿@model IEnumerable<DragDrop.Models.FileModel>
 @{
-    ViewData["Title"] = "Добавление файла";
+    ViewData["Title"] = "Choose file";
 }
-<h3>Выберите файл для загрузки</h3>
-<form asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
-    <input type="file" name="uploadedFile" /><br>
-    <input type="submit" value="Загрузить" />
+
+<h2>Parse to Account`s Table</h2>
+<form asp-action="Index1" asp-controller="Home" method="post" enctype="multipart/form-data">
+    <div class="file-drop-area">
+        <span class="fake-btn">Choose files</span>
+        <span class="file-msg">or drag and drop files here</span>
+        <input class="file-input" type="file"  name="uploadedFile" multiple>
+    </div>
+    <input type="submit" value="Download" /> 
 </form>
