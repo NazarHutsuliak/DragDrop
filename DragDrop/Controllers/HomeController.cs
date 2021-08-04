@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
@@ -23,11 +24,13 @@ namespace DragDrop.Controllers
         {
             return View(_context.Files.ToList());
         }
+
         [HttpPost]
-        public async Task<IActionResult> Index1(IFormFile uploadedFile)
+        public async Task<IActionResult> AddAndParseFile(IFormFile uploadedFile)
         {
             if (uploadedFile != null)
             {
+
                 string path = @"\Files\" + uploadedFile.FileName;
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
@@ -35,19 +38,46 @@ namespace DragDrop.Controllers
                     await uploadedFile.CopyToAsync(fileStream);
                 }
 
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
-                _context.SaveChanges();
+                if (Path.GetExtension(path) == ".json" || Path.GetExtension(path) == ".yaml")
+                {
 
-                var dataProvider = DataProvider.Create(file);
-                var accounts = dataProvider.GetData();
+                    FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+                    _context.Files.Add(file);
+                    _context.SaveChanges();
 
-                var accountsWithSum = new AccountsModelWithSumBalance();
-                var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
-                return View(result);
+                    try
+                    {
+                        DrawTable(file);
+                        return View("DrawTable");
+
+                    }
+                    catch 
+                    {
+                        ViewBag.Message = "Uncorrect structure in file ";
+                        return View("Index");
+                    }
+
+
+                }
+                ViewBag.Message = "PLease choose .json or .yaml file";
+                return View("Index");
             }
 
-            return View();
+            ViewBag.Message = "PLease choose file";
+            return View("Index");
+
+        }
+
+        public IActionResult DrawTable(FileModel file)
+        {
+
+            var dataProvider = DataProvider.Create(file);
+            var accounts = dataProvider.GetData();
+
+            var accountsWithSum = new AccountsModelWithSumBalance();
+            var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
+
+            return View(result);
 
         }
     }

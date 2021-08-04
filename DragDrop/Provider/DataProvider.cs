@@ -11,6 +11,7 @@ namespace DragDrop.Provider
     {
         public static IData Create(FileModel file)
         {
+            
             var pathToFile = @"C:\Users\nhutsuliak\source\repos\DragDrop\DragDrop\wwwroot\F" + file.Path;
             return Path.GetExtension(pathToFile) switch
             {
