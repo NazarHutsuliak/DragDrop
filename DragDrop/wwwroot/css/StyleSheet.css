@@ -18,6 +18,7 @@ section {
     flex-grow: 1;
 }
 
+
 .file-drop-area {
     position: relative;
     display: flex;
@@ -29,7 +30,6 @@ section {
     border-radius: 3px;
     transition: 0.2s;
 }
-
     .file-drop-area.is-active {
         background-color: rgba(255, 255, 255, 0.05);
     }

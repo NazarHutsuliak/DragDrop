@@ -5,11 +5,13 @@
 }
 
 <h2>Parse to Account`s Table</h2>
-<form asp-action="AddAndParseFile" asp-controller="Home" method="post"  enctype="multipart/form-data">
+<form asp-action="AddAndParseFile" asp-controller="Home" method="post" enctype="multipart/form-data">
     <div class="file-drop-area">
         <span class="fake-btn">Choose files</span>
         <span class="file-msg">or drag and drop files here</span>
         <input class="file-input" type="file" accept=".json,.yaml" name="uploadedFile" multiple>
     </div>
     <input type="submit" value="Download" />
+
 </form>
+

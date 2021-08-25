@@ -12,8 +12,8 @@ namespace DragDrop.Controllers
 {
     public class HomeController : Controller
     {
-       readonly ApplicationContext _context;
-       readonly IWebHostEnvironment _appEnvironment;
+        readonly ApplicationContext _context;
+        readonly IWebHostEnvironment _appEnvironment;
         public HomeController(ApplicationContext context, IWebHostEnvironment appEnvironment)
         {
             _context = context;
@@ -38,37 +38,43 @@ namespace DragDrop.Controllers
                     await uploadedFile.CopyToAsync(fileStream);
                 }
 
-                if (Path.GetExtension(path) == ".json" || Path.GetExtension(path) == ".yaml")
-                {
+                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+                _context.Files.Add(file);
+                _context.SaveChanges();
 
-                    FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                    _context.Files.Add(file);
-                    _context.SaveChanges();
+                return ValidateAndGetFile(file);
 
-                    try
-                    {
-                        DrawTable(file);
-                        return View("DrawTable");
-
-                    }
-                    catch 
-                    {
-                        ViewBag.Message = "Uncorrect structure in file ";
-                        return View("Index");
-                    }
-
-
-                }
-                ViewBag.Message = "PLease choose .json or .yaml file";
-                return View("Index");
             }
 
-            ViewBag.Message = "PLease choose file";
+            ViewBag.Message = "Please choose file";
             return View("Index");
 
         }
 
-        public IActionResult DrawTable(FileModel file)
+        public IActionResult ValidateAndGetFile(FileModel file)
+        {
+            if (Path.GetExtension(file.Path) == ".json" || Path.GetExtension(file.Path) == ".yaml")
+            {
+                try
+                {
+                    GetTable(file);
+                    return View("GetTable");
+                }
+                catch
+                {
+                    ViewBag.Message = "Uncorrect structure in file ";
+                    return View("Index");
+                }
+
+            }
+
+            ViewBag.Message = "Please choose .json or .yaml file";
+            return View("Index");
+
+
+        }
+
+        public IActionResult GetTable(FileModel file)
         {
 
             var dataProvider = DataProvider.Create(file);
@@ -76,6 +82,10 @@ namespace DragDrop.Controllers
 
             var accountsWithSum = new AccountsModelWithSumBalance();
             var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
+
+
+            //_context.Accounts.Add(result);
+            //_context.SaveChanges();
 
             return View(result);
 

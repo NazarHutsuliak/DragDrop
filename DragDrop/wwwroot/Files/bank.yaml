@@ -4,11 +4,11 @@
   Balance:
   - 100
   - 200
-  - 300
+  -// 300
   Currency: USD	
   RegistrationCity: Vinnytsia
-  Age: ff
-- Name: Nazar2
+  Age: 20
+- Name: Nazar
   Surname: Hutsuliak2
   Balance:
   - 20
