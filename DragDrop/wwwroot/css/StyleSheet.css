@@ -77,7 +77,7 @@ input[type=submit] {
     margin-right: 10px;
     font-size: 12px;
     text-transform: uppercase;
-    
+    color: #d7d7ef;
 }
 #customers {
     font-family: Arial, Helvetica, sans-serif;
