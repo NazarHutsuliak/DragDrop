@@ -25,6 +25,13 @@ namespace DragDrop.Controllers
             return View(_context.Files.ToList());
         }
 
+        [HttpGet]
+        public IActionResult GetTableFromDB()
+        {
+            var accountsFromDB = _context.Accounts;
+            return View("GetTable", accountsFromDB);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddAndParseFile(IFormFile uploadedFile)
         {
@@ -57,7 +64,7 @@ namespace DragDrop.Controllers
             {
                 try
                 {
-                    GetTable(file);
+                    GetAndSaveTable(file);
                     return View("GetTable");
                 }
                 catch
@@ -74,7 +81,7 @@ namespace DragDrop.Controllers
 
         }
 
-        public IActionResult GetTable(FileModel file)
+        public IActionResult GetAndSaveTable(FileModel file)
         {
 
             var dataProvider = DataProvider.Create(file);
@@ -83,12 +90,16 @@ namespace DragDrop.Controllers
             var accountsWithSum = new AccountsModelWithSumBalance();
             var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
 
+            foreach (AccountsModelWithSumBalance resultmodel in result)
+            {
+                _context.Accounts.Add(resultmodel);
+                _context.SaveChanges();
+            }
 
-            //_context.Accounts.Add(result);
-            //_context.SaveChanges();
-
-            return View(result);
+            return View("GetTable" , result);
 
         }
+
+
     }
 }

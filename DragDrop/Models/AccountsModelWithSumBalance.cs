@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.ComponentModel.DataAnnotations;
 
 namespace DragDrop.Models
 {
     public class AccountsModelWithSumBalance
     {
+        [Key]
+        public int AccountId { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public decimal Balance { get; set; }
@@ -17,7 +20,7 @@ namespace DragDrop.Models
         public IEnumerable<AccountsModelWithSumBalance> GetAccountsWithSumBalances(List<AccountsModel> accounts)
         {
             var accountsModelWith = accounts.Select(x => new AccountsModelWithSumBalance
-            {
+            {   AccountId = AccountId,
                 Name = x.Name,
                 Surname = x.Surname,
                 Balance = x.Balance.ToArray().Sum(),

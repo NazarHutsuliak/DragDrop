@@ -11,12 +11,5 @@ namespace DragDrop.Models
         {
             Database.EnsureCreated();
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AccountsModelWithSumBalance>((pc =>
-            {
-                pc.HasNoKey();
-            }));
-        }
     }
 }
