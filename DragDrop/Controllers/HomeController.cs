@@ -28,8 +28,7 @@ namespace DragDrop.Controllers
         [HttpGet]
         public IActionResult GetTableFromDB()
         {
-            var accountsFromDB = _context.Accounts;
-            return View("GetTable", accountsFromDB);
+            return View("GetTable", _context.Accounts);
         }
 
         [HttpPost]
@@ -49,7 +48,7 @@ namespace DragDrop.Controllers
                 _context.Files.Add(file);
                 _context.SaveChanges();
 
-                return ValidateAndGetFile(file);
+                return ValidateAndGetTable(file);
 
             }
 
@@ -58,7 +57,7 @@ namespace DragDrop.Controllers
 
         }
 
-        public IActionResult ValidateAndGetFile(FileModel file)
+        public IActionResult ValidateAndGetTable(FileModel file)
         {
             if (Path.GetExtension(file.Path) == ".json" || Path.GetExtension(file.Path) == ".yaml")
             {
@@ -99,7 +98,6 @@ namespace DragDrop.Controllers
             return View("GetTable" , result);
 
         }
-
 
     }
 }

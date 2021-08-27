@@ -1,11 +1,19 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using Xunit;
+using DragDrop.Controllers;
 
 namespace DragDropTests
 {
-    class ViewsTests
+    public class ViewsTests
     {
+        [Fact]
+        public void DownloadFromDBTest()
+        {
+
+        }
+
 
     }
 }
