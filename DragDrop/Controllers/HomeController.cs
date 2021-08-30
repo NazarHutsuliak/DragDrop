@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using DragDrop.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using System.Collections.Generic;
 using DragDrop.Provider;
 namespace DragDrop.Controllers
 {
@@ -32,12 +31,12 @@ namespace DragDrop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAndParseFile(IFormFile uploadedFile)
+        public async Task<IActionResult> AddAndParseFile(MockFile uploadedFile)
         {
             if (uploadedFile != null)
             {
 
-                string path = @"\Files\" + uploadedFile.FileName;
+                string path = /*@"\Files\" +*/ uploadedFile.FileName;
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {

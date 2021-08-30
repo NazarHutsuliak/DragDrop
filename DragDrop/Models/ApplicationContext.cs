@@ -6,6 +6,8 @@ namespace DragDrop.Models
     {
         public DbSet<FileModel> Files { get; set; }
         public DbSet<AccountsModelWithSumBalance> Accounts { get; set; }
+
+        public ApplicationContext() { }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
