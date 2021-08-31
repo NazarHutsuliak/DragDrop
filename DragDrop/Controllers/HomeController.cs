@@ -7,6 +7,9 @@ using DragDrop.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using DragDrop.Provider;
+using System.Collections.Generic;
+using System.Threading;
+
 namespace DragDrop.Controllers
 {
     public class HomeController : Controller
@@ -27,75 +30,103 @@ namespace DragDrop.Controllers
         [HttpGet]
         public IActionResult GetTableFromDB()
         {
-            return View("GetTable", _context.Accounts);
+            return View("ViewTable", _context.Accounts);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddAndParseFile(MockFile uploadedFile)
+        public async Task<IActionResult> AddAndParseFile(IFormFile uploadedFile)
         {
             if (uploadedFile != null)
             {
 
-                string path = /*@"\Files\" +*/ uploadedFile.FileName;
+                string path = @"\Files\" + uploadedFile.FileName;
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
 
-                FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
-                _context.Files.Add(file);
-                _context.SaveChanges();
+                var file = SaveFileToBD(uploadedFile, path);
 
-                return ValidateAndGetTable(file);
+                ValidateFile(file);
+
+                if (ViewBag.Message == "Add file has correct format")
+                {
+                    var result = GetTable(file);
+
+                    if (ViewBag.Message != "Uncorrect structure in file")
+                    {
+                        SaveTableToBD(result);
+                    }
+
+                    return ViewTable(result);
+
+                }
+                return View("Index");
 
             }
 
             ViewBag.Message = "Please choose file";
             return View("Index");
-
         }
 
-        public IActionResult ValidateAndGetTable(FileModel file)
+        public FileModel SaveFileToBD(IFormFile uploadedFile, string path)
+        {
+            FileModel file = new FileModel { Name = uploadedFile.FileName, Path = path };
+            _context.Files.Add(file);
+            _context.SaveChanges();
+            return file;
+        }
+
+        public void ValidateFile(FileModel file)
         {
             if (Path.GetExtension(file.Path) == ".json" || Path.GetExtension(file.Path) == ".yaml")
             {
-                try
-                {
-                    GetAndSaveTable(file);
-                    return View("GetTable");
-                }
-                catch
-                {
-                    ViewBag.Message = "Uncorrect structure in file ";
-                    return View("Index");
-                }
+                ViewBag.Message = "Add file has correct format";
+
+            }
+            else
+                ViewBag.Message = "Please choose .json or .yaml file";
+        }
+
+        public IEnumerable<AccountsModelWithSumBalance> GetTable(FileModel file)
+        {
+            try
+            {
+                var dataProvider = DataProvider.Create(file);
+                var accounts = dataProvider.GetData();
+
+                var accountsWithSum = new AccountsModelWithSumBalance();
+
+                return accountsWithSum.GetAccountsWithSumBalances(accounts);
+
+            }
+            catch
+            {
+                ViewBag.Message = "Uncorrect structure in file";
+                return null;
 
             }
 
-            ViewBag.Message = "Please choose .json or .yaml file";
-            return View("Index");
 
+        }
+        public IActionResult ViewTable(IEnumerable<AccountsModelWithSumBalance> result)
+        {
+            if (ViewBag.Message == "Uncorrect structure in file")
+            {
+                return View("Index");
+            }
+            return View("ViewTable", result);
 
         }
 
-        public IActionResult GetAndSaveTable(FileModel file)
+        public void SaveTableToBD(IEnumerable<AccountsModelWithSumBalance> result)
         {
-
-            var dataProvider = DataProvider.Create(file);
-            var accounts = dataProvider.GetData();
-
-            var accountsWithSum = new AccountsModelWithSumBalance();
-            var result = accountsWithSum.GetAccountsWithSumBalances(accounts);
-
             foreach (AccountsModelWithSumBalance resultmodel in result)
             {
                 _context.Accounts.Add(resultmodel);
                 _context.SaveChanges();
             }
-
-            return View("GetTable" , result);
-
         }
 
     }
