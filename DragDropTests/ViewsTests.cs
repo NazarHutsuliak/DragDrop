@@ -6,8 +6,9 @@ using DragDrop.Controllers;
 using DragDrop.Models;
 using Moq;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace DragDropTests
 {
@@ -17,19 +18,16 @@ namespace DragDropTests
         public void DownloadFromDBTest()
         {
             //Arrange
+
             var mock = new Mock<ApplicationContext>();
             var mock1 = new Mock<IWebHostEnvironment>();
-            var home = new HomeController(mock.Object,mock1.Object);
-
-
+            var expected = new Mock<IActionResult>();
 
             //Act
-            var actual = home.GetTableFromDB();
-
-
+            var actual = new Mock<HomeController>(mock.Object, mock1.Object).Object.GetTableFromDB();
             
             //Assert
-            Assert.Equal("ViewTable",   );
+            Assert.IsType(expected.Object, actual );
         }
 
 
