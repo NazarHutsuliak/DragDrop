@@ -24,16 +24,17 @@ namespace DragDrop.Controllers
 
         public IActionResult Index()
         {
-            return View(_context.Files.ToList());
+            return View("Index",_context.Files);
         }
 
-        [HttpGet]
+        [HttpGet("database-table")]
         public IActionResult GetTableFromDB()
         {
             return View("ViewTable", _context.Accounts);
+
         }
 
-        [HttpPost]
+        [HttpPost("download-table")]
         public async Task<IActionResult> AddAndParseFile(IFormFile uploadedFile)
         {
             if (uploadedFile != null)

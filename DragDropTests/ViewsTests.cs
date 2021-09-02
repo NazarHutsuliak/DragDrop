@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Http;
+using System.Diagnostics;
 
 namespace DragDropTests
 {
@@ -18,18 +20,104 @@ namespace DragDropTests
         public void DownloadFromDBTest()
         {
             //Arrange
-
-            var mock = new Mock<ApplicationContext>();
-            var mock1 = new Mock<IWebHostEnvironment>();
-            var expected = new Mock<IActionResult>();
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
 
             //Act
-            var actual = new Mock<HomeController>(mock.Object, mock1.Object).Object.GetTableFromDB();
-            
+            ViewResult viewResult = controller.GetTableFromDB() as ViewResult;
+
             //Assert
-            Assert.IsType(expected.Object, actual );
+            Assert.Equal("ViewTable", viewResult.ViewName);
         }
 
+        [Fact]
+        public void IndexViewTest()
+        {
+            //Arrange
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
 
+            //Act
+
+            ViewResult viewResult = controller.Index() as ViewResult;
+
+            //Assert
+            Assert.Equal("Index", viewResult.ViewName);
+        }
+
+        [Fact]
+        public void UncorrectStructureFileTest()
+        {
+            //Arrange
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
+            controller.ViewBag.Message = "Uncorrect structure in file";
+
+            //Act
+            ViewResult viewResult = controller.ViewTable(mockcontext.Object.Accounts) as ViewResult;
+
+            //Assert
+            Assert.Equal("Index", viewResult.ViewName);
+
+        }
+
+        [Fact]
+        public void CorrectStructureFileTest()
+        {
+            //Arrange
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
+
+            //Act
+            ViewResult viewResult = controller.ViewTable(mockcontext.Object.Accounts) as ViewResult;
+
+            //Assert
+            Assert.Equal("ViewTable", viewResult.ViewName);
+
+        }
+
+        [Fact]
+        public void UncorrectFormatFileTest()
+        {
+            //Arrange
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var mockFile = new Mock<FileModel>();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
+
+            mockFile.Object.Path = "bank.txt";
+
+            //Act
+            controller.ValidateFile(mockFile.Object);
+
+            //Assert
+            Assert.Equal("Please choose .json or .yaml file", controller.ViewBag.Message);
+
+        }
+
+        [Fact]
+        public void CorrectFormatFileTest()
+        {
+            //Arrange
+            var mockcontext = new Mock<ApplicationContext>();
+            var mockhost = new Mock<IWebHostEnvironment>();
+            var file = new FileModel();
+            var controller = new HomeController(mockcontext.Object, mockhost.Object);
+
+            file.Path = "bank.json";
+
+            //Act
+            controller.ValidateFile(file);
+
+            //Assert
+            Assert.Equal("Add file has correct format", controller.ViewBag.Message);
+
+        }
+
+  
     }
 }
