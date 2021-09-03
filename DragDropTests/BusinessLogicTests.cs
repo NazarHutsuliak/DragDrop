@@ -13,7 +13,7 @@ namespace DragDropTests
         public void BalanseSumTest()
         {
             // Arrange
-            var expecteList = new List<AccountsModelWithSumBalance>()
+            var expectedList = new List<AccountsModelWithSumBalance>()
             {
                 new AccountsModelWithSumBalance()
                 {
@@ -26,7 +26,7 @@ namespace DragDropTests
                 }
             };
 
-            var expected = expecteList.Select(x => x.Balance);
+            var expected = expectedList.Select(x => x.Balance);
 
             var actualList = new List<AccountsModel>()
             {
