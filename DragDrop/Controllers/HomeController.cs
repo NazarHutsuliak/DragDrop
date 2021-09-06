@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using DragDrop.Models;
@@ -8,7 +6,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using DragDrop.Provider;
 using System.Collections.Generic;
-using System.Threading;
+
 
 namespace DragDrop.Controllers
 {
@@ -40,7 +38,7 @@ namespace DragDrop.Controllers
             if (uploadedFile != null)
             {
 
-                string path = @"\Files\" + uploadedFile.FileName;
+                var path = @"\Files\" + uploadedFile.FileName;
 
                 using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                 {
@@ -55,9 +53,9 @@ namespace DragDrop.Controllers
                 {
                     var result = GetTable(file);
 
-                    if (ViewBag.Message != "Uncorrect structure in file")
+                    if (ViewBag.Message != "Incorrect structure in file")
                     {
-                        SaveTableToBD(result);
+                        SaveTableToBd(result);
                     }
 
                     return ViewTable(result);
@@ -104,7 +102,7 @@ namespace DragDrop.Controllers
             }
             catch
             {
-                ViewBag.Message = "Uncorrect structure in file";
+                ViewBag.Message = "Incorrect structure in file";
                 return null;
 
             }
@@ -113,19 +111,14 @@ namespace DragDrop.Controllers
         }
         public IActionResult ViewTable(IEnumerable<AccountsModelWithSumBalance> result)
         {
-            if (ViewBag.Message == "Uncorrect structure in file")
-            {
-                return View("Index");
-            }
-            return View("ViewTable", result);
-
+            return ViewBag.Message != "Incorrect structure in file" ? View("ViewTable", result) : View("Index");
         }
 
-        public void SaveTableToBD(IEnumerable<AccountsModelWithSumBalance> result)
+        public void SaveTableToBd(IEnumerable<AccountsModelWithSumBalance> result)
         {
-            foreach (AccountsModelWithSumBalance resultmodel in result)
+            foreach (var modelWithSumBalance in result)
             {
-                _context.Accounts.Add(resultmodel);
+                _context.Accounts.Add(modelWithSumBalance);
                 _context.SaveChanges();
             }
         }

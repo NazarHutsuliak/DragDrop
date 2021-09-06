@@ -20,7 +20,7 @@ namespace DragDropTests
                     Name = "Name",
                     Surname = "Surname",
                     Balance = 51,
-                    Currency = "Curency",
+                    Currency = "Currency",
                     RegistrationCity = "city",
                     Age = 10
                 }
@@ -35,7 +35,7 @@ namespace DragDropTests
                     Name = "Name",
                     Surname = "Surname",
                     Balance = new List<decimal> { 1, 2, 3, 45 },
-                    Currency = "Curency",
+                    Currency = "Currency",
                     RegistrationCity = "city",
                     Age = 10
                 }

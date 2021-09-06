@@ -54,7 +54,7 @@ namespace DragDropTests
             var mockcontext = new Mock<ApplicationContext>();
             var mockhost = new Mock<IWebHostEnvironment>();
             var controller = new HomeController(mockcontext.Object, mockhost.Object);
-            controller.ViewBag.Message = "Uncorrect structure in file";
+            controller.ViewBag.Message = "Incorrect structure in file";
 
             //Act
             ViewResult viewResult = controller.ViewTable(mockcontext.Object.Accounts) as ViewResult;
@@ -81,7 +81,7 @@ namespace DragDropTests
         }
 
         [Fact]
-        public void UncorrectFormatFileTest()
+        public void IncorrectFormatFileTest()
         {
             //Arrange
             var mockcontext = new Mock<ApplicationContext>();
