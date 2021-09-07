@@ -2,7 +2,7 @@
 
 namespace DragDrop.Models
 {
-    public sealed class ApplicationContext : DbContext
+    public class ApplicationContext : DbContext
     {
         public DbSet<FileModel> Files { get; set; }
         public DbSet<AccountsModelWithSumBalance> Accounts { get; set; }
